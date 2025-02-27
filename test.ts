@@ -117,6 +117,28 @@ let getCountry = (countryName: String) => {
     return secCountry;
 }
 
+let getUnderaged = (countryName:string) => {
+    
+    var countryKey = countriesMap.get(countryName);
+    var country = countries[countryKey];
+    var countrySlaves: Slave[] = [];
+
+    var countrCities: City[] = cities.filter((city) => {
+        return city.country_id == country.id;
+    })
+
+    countrCities.forEach((city) => {
+        slaves.forEach((slave) => {
+            if (slave.city_id == city.id) {
+                countrySlaves.push(slave);
+            }
+        })
+    })
+
+    var underagedSlaves = countrySlaves.filter(slave => slave.age < 18);
+    return underagedSlaves;
+}
+
 // Добавление стран
 addCountry("Казахстан", "Крутая супер страна");
 addCountry("Россия", "Крутая большая супер страна");
@@ -164,10 +186,8 @@ addSlave(5, "Ван", "Юй", "Лэович", 36, "male", "worker");
 addSlave(5, "Сяо", "Лин", "Мэйовна", 24, "female", "free");
 addSlave(5, "Чэнь", "Бо", "Фэнович", 39, "male", "worker");
 
-let getUnderaged = slaves.filter(slave => slave.age < 18);
-
 let test = evacuate("Казахстан", "Москва", "Астана");
 
-console.log("МЕНЬШЕ 18 ЛЕТ:", getUnderaged);
+console.log("КОМУ МЕНЬШЕ 18: \n", getUnderaged("Казахстан"));
 
-console.log("СТРАНА КУДА ПЕРЕЕХАЛИ:", test)
+// console.log("СТРАНА КУДА ПЕРЕЕХАЛИ:", test);
