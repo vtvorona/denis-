@@ -170,4 +170,4 @@ let test = evacuate("Казахстан", "Москва", "Астана");
 
 console.log("МЕНЬШЕ 18 ЛЕТ:", getUnderaged);
 
-console.log("КТО ПЕРЕЕХАЛ:", test)
+console.log("СТРАНА КУДА ПЕРЕЕХАЛИ:", test)
