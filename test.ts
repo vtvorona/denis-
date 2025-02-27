@@ -168,4 +168,6 @@ let getUnderaged = slaves.filter(slave => slave.age < 18);
 
 let test = evacuate("Казахстан", "Москва", "Астана");
 
-console.log(getUnderaged);
+console.log("МЕНЬШЕ 18 ЛЕТ:", getUnderaged);
+
+console.log("КТО ПЕРЕЕХАЛ:", test)
