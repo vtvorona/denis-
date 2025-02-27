@@ -93,7 +93,7 @@ let evacuate = (countryName: string, fromCityName: string, toCityName: string) =
 
     let country = getCountry(countryName);
     return country;
-};
+}
 
 let getCountry = (countryName: String) => {
 
@@ -170,4 +170,4 @@ let test = evacuate("Казахстан", "Москва", "Астана");
 
 console.log("МЕНЬШЕ 18 ЛЕТ:", getUnderaged);
 
-console.log("СТРАНА КУДА ПЕРЕЕХАЛИ:", test)
+console.log("СТРАНА КУДА ПЕРЕЕХАЛИ:", test);
