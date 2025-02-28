@@ -23,6 +23,11 @@ type Country = {
     cities: City[],
 }
 
+type Genders = {
+    male: Slave[],
+    female: Slave[],
+}
+
 let slaves: Slave[] = [];
 let cities: City[] = [];
 let countries: Country[] = [];
@@ -121,12 +126,30 @@ function evacuate(
     };
 }
 
-function getUnderaged(country: Country):Slave[] {
+function getUnderaged(country: Country): Slave[] {
     return country.cities.flatMap((city) => city.slaves.filter(slave => slave.age < 18))
 }
 
-function getStatusWorkers(country: Country):Slave[] {
+function getStatusWorkers(country: Country): Slave[] {
     return country.cities.flatMap((city) => city.slaves.filter(slave => { slave.status == "worker" }))
+}
+
+function numbSlaves (country: Country):Number {
+    return country.cities.flatMap((city) => city.slaves).length
+}
+
+function splitGenders (country: Country)
+:Genders {
+    return{
+        male: country.cities.flatMap((city) => city.slaves.filter(slave => slave.floor == "male")),
+        female: country.cities.flatMap((city) => city.slaves.filter(slave => slave.floor == "female")),
+    }
+}
+
+function searchSlave(name:string, surname?:string){
+    return{
+        ...slaves.filter(slave => slave.name == name || slave.surname == surname)
+    }
 }
 
 // Добавление стран
@@ -176,8 +199,10 @@ addSlave(5, "Ван", "Юй", "Лэович", 36, "male", "worker");
 addSlave(5, "Сяо", "Лин", "Мэйовна", 24, "female", "free");
 addSlave(5, "Чэнь", "Бо", "Фэнович", 39, "male", "worker");
 
-console.log(evacuate("Казахстан", "Астана", "Алматы"));
+// console.log(evacuate("Казахстан", "Астана", "Алматы"));
+// console.log(getUnderaged(getCountry("Россия")));
+// console.log(getStatusWorkers(getCountry("Россия")));
+// console.log(numbSlaves(getCountry("Казахстан")));
+//console.log(splitGenders(getCountry("Россия")));
 
-console.log(getUnderaged(getCountry("Россия")));
-
-console.log(getStatusWorkers(getCountry("Россия")));
+console.log(searchSlave("Ван"))
