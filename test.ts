@@ -125,8 +125,8 @@ function getUnderaged(country: Country): Slave[] {
     return country.cities.flatMap((city) => city.slaves.filter(slave => slave.age < 18))
 }
 
-function getStatusWorkers(country: Country) {
-    return country.cities.flatMap((city) => city.slaves.filter(slave => slave.status == "worker"))
+function getStatusWorkers(country: Country):Slave[] {
+    return country.cities.flatMap((city) => city.slaves.filter(slave => {slave.status == "worker"}))
 }
 
 // Добавление стран
