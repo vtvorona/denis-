@@ -125,6 +125,10 @@ function getUnderaged(country: Country): Slave[] {
     return country.cities.flatMap((city) => city.slaves.filter(slave => slave.age < 18))
 }
 
+function getStatusWorkers(country: Country) {
+    return country.cities.flatMap((city) => city.slaves.filter(slave => slave.status == "worker"))
+}
+
 // Добавление стран
 addCountry("Казахстан", "Крутая супер страна");
 addCountry("Россия", "Крутая большая супер страна");
@@ -176,4 +180,4 @@ console.log(evacuate("Казахстан", "Астана", "Алматы"));
 
 console.log(getUnderaged(getCountry("Россия")));
 
-
+console.log(getStatusWorkers(getCountry("Россия")));
