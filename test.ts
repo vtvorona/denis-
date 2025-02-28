@@ -13,14 +13,14 @@ type City = {
     id: number,
     country_id: number,
     name: string,
-    slaves?: Slave[],
+    slaves: Slave[],
 }
 
 type Country = {
     id: number,
     name: string,
     description: string,
-    cities?: City[],
+    cities: City[],
 }
 
 let slaves: Slave[] = [];
@@ -40,6 +40,7 @@ let addCountry = (name: string, description: string) => {
         id: firstCount,
         name: name,
         description: description,
+        cities: [],
     }
 
     countries.push(country);
@@ -54,6 +55,7 @@ let addCity = (country_id: number, name: string) => {
         id: secondCount,
         country_id: country_id,
         name: name,
+        slaves: [],
     }
 
     cities.push(city);
@@ -80,63 +82,47 @@ let addSlave = (cityId: number, name: string, surname: string, patronymic: strin
     thirdCount++
 }
 
-let evacuate = (countryName: string, fromCityName: string, toCityName: string) => {
-
-    var fromCityId = citiesMap.get(fromCityName);
-    var toCityId = citiesMap.get(toCityName);
-
-    slaves.forEach((item) => {
-        if (item.city_id == fromCityId) {
-            item.city_id = toCityId;
-        }
-    })
-
-    let country = getCountry(countryName);
-    return country;
-};
-
-let getCountry = (countryName: String) => {
-
-    var countryKey = countriesMap.get(countryName);
-    var secCountry = countries[countryKey];
-
-    var secCities: City[] = cities.filter((city) => {
-        city.slaves = [];
-        return city.country_id == secCountry.id;
-    })
-
-    secCities.forEach((city) => {
-        slaves.forEach((slave) => {
-            if (slave.city_id == city.id) {
-                city.slaves?.push(slave);
-            }
+function getCountry(
+    countryName: string,
+): Country {
+    let country = countries[countriesMap.get(countryName)];
+    return {
+        ...country,
+        cities: cities.filter((city) => {
+            city.slaves = slaves.filter(slave => slave.city_id == city.id && city.country_id == country.id);
+            return city.country_id == country.id;
         })
-    })
-
-    secCountry.cities = secCities;
-    return secCountry;
+    }
 }
 
-let getUnderaged = (countryName:string) => {
-    
-    var countryKey = countriesMap.get(countryName);
-    var country = countries[countryKey];
-    var countrySlaves: Slave[] = [];
+function evacuate(
+    countryName: string,
+    oldCityName: string,
+    newCityName: string,
+) {
+    let country = getCountry(countryName);
+    let oldCityId = citiesMap.get(oldCityName);
+    let newCityId = citiesMap.get(newCityName);
 
-    var countrCities: City[] = cities.filter((city) => {
-        return city.country_id == country.id;
-    })
+    return {
+        ...country,
+        cities: country.cities?.map((city) => ({
+            ...city,
+            slaves:
+                city.id === oldCityId
+                    ? []
+                    : city.id === newCityId
+                        ? [
+                            ...city.slaves,
+                            ...(country.cities.find((city) => city.id === oldCityId)?.slaves ?? []),                                         // и затем обращаемся 
+                        ]
+                        : city.slaves
+        })),
+    };
+}
 
-    countrCities.forEach((city) => {
-        slaves.forEach((slave) => {
-            if (slave.city_id == city.id) {
-                countrySlaves.push(slave);
-            }
-        })
-    })
-
-    var underagedSlaves = countrySlaves.filter(slave => slave.age < 18);
-    return underagedSlaves;
+function getUnderaged(country: Country): Slave[] {
+    return country.cities.flatMap((city) => city.slaves.filter(slave => slave.age < 18))
 }
 
 // Добавление стран
@@ -186,8 +172,8 @@ addSlave(5, "Ван", "Юй", "Лэович", 36, "male", "worker");
 addSlave(5, "Сяо", "Лин", "Мэйовна", 24, "female", "free");
 addSlave(5, "Чэнь", "Бо", "Фэнович", 39, "male", "worker");
 
-let test = evacuate("Казахстан", "Москва", "Астана");
+console.log(evacuate("Казахстан", "Астана", "Алматы"));
 
-console.log("КОМУ МЕНЬШЕ 18: \n", getUnderaged("Казахстан"));
+console.log(getUnderaged(getCountry("Россия")));
 
-// console.log("СТРАНА КУДА ПЕРЕЕХАЛИ:", test);
+
