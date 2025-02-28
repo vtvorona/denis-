@@ -121,12 +121,12 @@ function evacuate(
     };
 }
 
-function getUnderaged(country: Country): Slave[] {
+function getUnderaged(country: Country):Slave[] {
     return country.cities.flatMap((city) => city.slaves.filter(slave => slave.age < 18))
 }
 
 function getStatusWorkers(country: Country):Slave[] {
-    return country.cities.flatMap((city) => city.slaves.filter(slave => {slave.status == "worker"}))
+    return country.cities.flatMap((city) => city.slaves.filter(slave => { slave.status == "worker" }))
 }
 
 // Добавление стран
