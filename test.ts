@@ -93,10 +93,12 @@ function getCountry(
     let country = countries[countriesMap.get(countryName)];
     return {
         ...country,
-        cities: cities.filter((city) => {
-            city.slaves = slaves.filter(slave => slave.city_id == city.id && city.country_id == country.id);
-            return city.country_id == country.id;
-        })
+        cities: [
+            ...cities.filter(city => city.country_id === country.id),
+        ].map((city) => ({
+            ...city,
+            slaves: slaves.filter(slave => slave.city_id === city.id)
+        }))
     }
 }
 
@@ -126,6 +128,26 @@ function evacuate(
     };
 }
 
+// function specialRelocationOperation(
+//     leavCountry: Country, arrivalCountry: Country,
+// ) {
+//     let countries = [leavCountry, arrivalCountry]
+//     return {
+//         ...arrivalCountry,
+//         cities: arrivalCountry.cities.map((city) => ({
+//             ...city,
+//             slaves:
+//                 [   
+//                     ...city.slaves,
+//                     countries.map((country) => ({
+//                         ...country,
+                        
+//                     }))
+//                 ]
+//         }))
+//     }
+// }
+
 function getUnderaged(country: Country): Slave[] {
     return country.cities.flatMap((city) => city.slaves.filter(slave => slave.age < 18))
 }
@@ -134,20 +156,20 @@ function getStatusWorkers(country: Country): Slave[] {
     return country.cities.flatMap((city) => city.slaves.filter(slave => { slave.status == "worker" }))
 }
 
-function numbSlaves (country: Country):Number {
+function numbSlaves(country: Country): Number {
     return country.cities.flatMap((city) => city.slaves).length
 }
 
-function splitGenders (country: Country)
-:Genders {
-    return{
+function splitGenders(country: Country)
+    : Genders {
+    return {
         male: country.cities.flatMap((city) => city.slaves.filter(slave => slave.floor == "male")),
         female: country.cities.flatMap((city) => city.slaves.filter(slave => slave.floor == "female")),
     }
 }
 
-function searchSlave(name:string, surname?:string){
-    return{
+function searchSlave(name: string, surname?: string) {
+    return {
         ...slaves.filter(slave => slave.name == name || slave.surname == surname)
     }
 }
@@ -203,6 +225,9 @@ addSlave(5, "Чэнь", "Бо", "Фэнович", 39, "male", "worker");
 // console.log(getUnderaged(getCountry("Россия")));
 // console.log(getStatusWorkers(getCountry("Россия")));
 // console.log(numbSlaves(getCountry("Казахстан")));
-//console.log(splitGenders(getCountry("Россия")));
+// console.log(splitGenders(getCountry("Россия")));
+// console.log(searchSlave("Ван"))
 
-console.log(searchSlave("Ван"))
+let russia = getCountry("Россия");
+let china = getCountry("Китай");
+
